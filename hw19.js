@@ -1,8 +1,8 @@
 const post = document.getElementById('post');
 const getPostBtn = document.getElementById('getPost');
 getPostBtn.onclick = getPost;
-let title = document.getElementById('title');
-let body = document.getElementById('body');
+const title = document.getElementById('title');
+const body = document.getElementById('body');
 const comments = document.getElementById('comments');
 const getCommentsBtn = document.getElementById('getComments');
 getCommentsBtn.addEventListener('click', getComments);
