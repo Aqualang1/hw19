@@ -1,23 +1,24 @@
-const post = document.getElementById('post');
-const getPostBtn = document.getElementById('getPost');
+const post = document.querySelector('#post');
+const getPostBtn = document.querySelector('#getPost');
 getPostBtn.onclick = getPost;
-const title = document.getElementById('title');
-const body = document.getElementById('body');
-const comments = document.getElementById('comments');
-const getCommentsBtn = document.getElementById('getComments');
+const postTitle = document.querySelector('#post-title');
+const postBody = document.querySelector('#post-body');
+const comments = document.querySelector('#comments');
+const getCommentsBtn = document.querySelector('#getComments');
 getCommentsBtn.addEventListener('click', getComments);
 
 
 function getPost() {
+    const value = +post.value;
 
-    if (+post.value > 0 && +post.value <= 100) {
+    if (value > 0 && value <= 100) {
+        
         fetch(`https://jsonplaceholder.typicode.com/posts/${+post.value}`)
             .then(response => response.json())
-            .then(json => {
-                title.innerHTML = json.title,
-                    body.innerHTML = json.body,
-                    comments.classList.remove('hidden'),
-                    post.readOnly = true;
+            .then(({title, body}) => {
+                    postTitle.innerHTML = title;
+                    postBody.innerHTML = body;
+                    getCommentsBtn.classList.remove('hidden');
             })
             .catch((error) => alert('no response'));
     } else {
@@ -26,21 +27,23 @@ function getPost() {
 }
 
 function getComments() {
+    
+    comments.innerHTML = '';
+    
     fetch(`https://jsonplaceholder.typicode.com/comments?postId=${+post.value}`)
         .then(response => response.json())
         .then(json => {
-            json.forEach(comment => {
+            json.forEach(({postId, id, name, email, body}) => {
                 const commentsContent = document.createElement('p')
                 commentsContent.innerHTML = `
-                postid: ${comment.postId},
-                id: ${comment.id},
-                name: ${comment.name},
-                email: ${comment.email},
-                body: ${comment.body}
+                postid: ${postId},
+                id: ${id},
+                name: ${name},
+                email: ${email},
+                body: ${body}
                 `;
                 comments.appendChild(commentsContent);
-                getCommentsBtn.removeEventListener('click', getComments);
             })
         })
-        .catch((error) => alert('no response'));
+        .catch((error) => alert(error));
 }
